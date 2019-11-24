@@ -6,7 +6,7 @@ namespace Agenda.Data.Context {
         public DbSet<Contato> Contatos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AgendaDb;Integrated Security=true");
+            optionsBuilder.UseSqlServer("Server=localhost;Database=AgendaDb;User Id=sa;Password=yourStrong(!)Password");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
