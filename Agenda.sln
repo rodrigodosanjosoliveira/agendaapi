@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6375473A-FD1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agenda.Domain", "src\Agenda.Domain\Agenda.Domain.csproj", "{F58FA0CF-98DD-4D55-A3ED-FC9B4B021B47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agenda.Data", "Agenda.Data\Agenda.Data.csproj", "{ECFA24CA-1C4B-4C30-B39E-6B8EA4DE2EE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agenda.Data", "src\Agenda.Data\Agenda.Data.csproj", "{ECFA24CA-1C4B-4C30-B39E-6B8EA4DE2EE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
