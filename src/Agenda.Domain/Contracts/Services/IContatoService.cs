@@ -2,7 +2,6 @@
 using Agenda.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Agenda.Domain.Contracts.Services {

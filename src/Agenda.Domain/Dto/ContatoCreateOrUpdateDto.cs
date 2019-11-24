@@ -1,5 +1,5 @@
 ﻿namespace Agenda.Domain.Dto {
-    public class ContatoCreateDto {
+    public class ContatoCreateOrUpdateDto {
         public string Nome { get; set; }
         public string Canal { get; set; }
         public string Valor { get; set; }
