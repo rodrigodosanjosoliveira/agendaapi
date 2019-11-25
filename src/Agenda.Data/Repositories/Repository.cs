@@ -3,7 +3,7 @@ using Agenda.Domain.Contracts.Repositories;
 using Agenda.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Agenda.Data.Repositories
@@ -32,7 +32,7 @@ namespace Agenda.Data.Repositories
       await _context.SaveChangesAsync();
     }
 
-    public IQueryable<T> GetAll()
+    public IEnumerable<T> GetAll()
     {
       return _context.Set<T>().AsNoTracking();
     }
@@ -46,8 +46,15 @@ namespace Agenda.Data.Repositories
 
     public async Task<T> Update(Guid id, T entity)
     {
-      _context.Set<T>().Update(entity);
-      await _context.SaveChangesAsync();
+      _context.Entry(entity).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        throw;
+      }
       return entity;
     }
   }
