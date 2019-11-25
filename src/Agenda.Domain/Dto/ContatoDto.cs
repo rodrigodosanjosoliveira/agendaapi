@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Agenda.Domain.Entities;
 
 namespace Agenda.Domain.Dto
@@ -17,6 +20,11 @@ namespace Agenda.Domain.Dto
       Canal = contato.Canal;
       Valor = contato.Valor;
       Observacoes = contato.Observacoes;
+    }
+
+    public static List<ContatoDto> Convert(IEnumerable<Contato> contatos)
+    {
+      return contatos.Select(contato => new ContatoDto(contato)).ToList();
     }
   }
 }

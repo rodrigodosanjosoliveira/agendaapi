@@ -1,4 +1,6 @@
-﻿namespace Agenda.Domain.Entities
+﻿using Agenda.Domain.Dto;
+
+namespace Agenda.Domain.Entities
 {
   public class Contato : Entity
   {
@@ -16,5 +18,15 @@
     public string Canal { get; private set; }
     public string Valor { get; private set; }
     public string Observacoes { get; private set; }
+
+    public Contato Converter(ContatoCreateOrUpdateDto contatoCreateOrUpdateDto)
+    {
+      this.Nome = contatoCreateOrUpdateDto.Nome;
+      this.Canal = contatoCreateOrUpdateDto.Canal;
+      this.Observacoes = contatoCreateOrUpdateDto.Observacoes;
+      this.Valor = contatoCreateOrUpdateDto.Valor;
+
+      return this;
+    }
   }
 }
