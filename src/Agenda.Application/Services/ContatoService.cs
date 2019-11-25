@@ -48,7 +48,7 @@ namespace Agenda.Application.Services
     public async Task<Contato> Update(Guid id, ContatoCreateOrUpdateDto contato)
     {
       var contatoDb = await GetById(id);
-      var contatoAtualizado = new Contato(contato.Nome, contato.Canal, contato.Valor, contato.Observacoes);
+      var contatoAtualizado = contatoDb.Converter(contato);
       return await _contatoRepository.Update(id, contatoAtualizado);
     }
   }
