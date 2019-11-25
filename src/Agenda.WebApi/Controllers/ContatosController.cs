@@ -7,10 +7,11 @@ using Agenda.Domain.Contracts.Services;
 using Agenda.Domain.Dto;
 using Agenda.Domain.Entities;
 using Agenda.Domain.ValueTypes;
+using System.Collections.Generic;
 
 namespace Agenda.WebApi.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   [Produces(MediaTypeNames.Application.Json)]
   [ApiController]
   public class ContatosController : ControllerBase
@@ -22,7 +23,16 @@ namespace Agenda.WebApi.Controllers
       _contatoService = contatoService;
     }
 
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public List<ContatoDto> GetAll()
+    {
+      var contatos = _contatoService.GetAll();
+      return ContatoDto.Convert(contatos);
+    }
+
     [HttpGet("{idContato}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ContatoDto>> Get(Guid idContato)
@@ -51,7 +61,6 @@ namespace Agenda.WebApi.Controllers
         return NotFound(erro);
       }
 
-
       return Ok(new ContatoDto(contato));
     }
 
@@ -71,5 +80,49 @@ namespace Agenda.WebApi.Controllers
 
       return CreatedAtAction(nameof(Get), new { idContato = novoContato.Id }, new ContatoDto(novoContato));
     }
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Delete(Guid idContato)
+    {
+      if (idContato == Guid.Empty)
+        return BadRequest();
+
+      Contato contato = await _contatoService.GetById(idContato);
+      if (contato != null)
+      {
+        await _contatoService.Delete(idContato);
+        return NoContent();
+      }
+
+      return NotFound();
+    }
+
+    [HttpPut("idContato")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Put(Guid idContato, [FromBody] ContatoCreateOrUpdateDto contato)
+    {
+      if (idContato == Guid.Empty)
+        return BadRequest();
+
+      try
+      {
+        var contatoAtualizado = await _contatoService.Update(idContato, contato);
+      }
+      catch
+      {
+        if (_contatoService.GetById(idContato) == null)
+          return NotFound();
+      }
+
+      return NoContent();
+
+    }
+
   }
+
 }
