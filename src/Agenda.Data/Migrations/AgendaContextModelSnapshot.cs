@@ -4,49 +4,50 @@ using Agenda.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Agenda.Data.Migrations
 {
-  [DbContext(typeof(AgendaContext))]
-  partial class AgendaContextModelSnapshot : ModelSnapshot
-  {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(AgendaContext))]
+    partial class AgendaContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-      modelBuilder
-          .HasAnnotation("ProductVersion", "3.0.0")
-          .HasAnnotation("Relational:MaxIdentifierLength", 128)
-          .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            modelBuilder
+                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-      modelBuilder.Entity("Agenda.Domain.Entities.Contato", b =>
-          {
-            b.Property<Guid>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("uniqueidentifier");
+            modelBuilder.Entity("Agenda.Domain.Entities.Contato", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-            b.Property<string>("Canal")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Canal")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<DateTime>("DateCreated")
-                      .HasColumnType("datetime2");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
 
-            b.Property<DateTime?>("DateUpdated")
-                      .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
 
-            b.Property<string>("Nome")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("Observacoes")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("Valor")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Valor")
+                        .HasColumnType("nvarchar(max)");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.ToTable("Contatos");
-          });
+                    b.ToTable("Contatos");
+                });
 #pragma warning restore 612, 618
+        }
     }
-  }
 }

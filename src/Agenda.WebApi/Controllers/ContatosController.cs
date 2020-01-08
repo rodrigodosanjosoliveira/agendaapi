@@ -11,118 +11,118 @@ using System.Collections.Generic;
 
 namespace Agenda.WebApi.Controllers
 {
-  [Route("[controller]")]
-  [Produces(MediaTypeNames.Application.Json)]
-  [ApiController]
-  public class ContatosController : ControllerBase
-  {
-    private readonly IContatoService _contatoService;
-
-    public ContatosController(IContatoService contatoService)
+    [Route("[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ApiController]
+    public class ContatosController : ControllerBase
     {
-      _contatoService = contatoService;
-    }
+        private readonly IContatoService _contatoService;
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public List<ContatoDto> GetAll()
-    {
-      var contatos = _contatoService.GetAll();
-      return ContatoDto.Convert(contatos);
-    }
-
-    [HttpGet("{idContato}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ContatoDto>> Get(Guid idContato)
-    {
-      Erro erro = null;
-
-      if (idContato == Guid.Empty)
-      {
-        erro = new Erro
+        public ContatosController(IContatoService contatoService)
         {
-          Mensagem = "Parâmetro inválido",
-          StatusCode = "400"
-        };
-        return BadRequest(erro);
-      }
+            _contatoService = contatoService;
+        }
 
-      var contato = await _contatoService.GetById(idContato);
-
-      if (contato == null)
-      {
-        erro = new Erro
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public List<ContatoDto> GetAll()
         {
-          Mensagem = "Contato não encontrado",
-          StatusCode = "404"
-        };
-        return NotFound(erro);
-      }
+            var contatos = _contatoService.GetAll();
+            return ContatoDto.Convert(contatos);
+        }
 
-      return Ok(new ContatoDto(contato));
-    }
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<ContatoDto>> Post([FromBody] ContatoCreateOrUpdateDto contatoCreateOrUpdateDto)
-    {
-      if (contatoCreateOrUpdateDto == null)
-        return BadRequest(new Erro
+        [HttpGet("{idContato}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ContatoDto>> Get(Guid idContato)
         {
-          Mensagem = "Parâmetros inválidos",
-          StatusCode = "400"
-        });
+            Erro erro = null;
 
-      Contato novoContato = await _contatoService.Create(contatoCreateOrUpdateDto);
+            if (idContato == Guid.Empty)
+            {
+                erro = new Erro
+                {
+                    Mensagem = "Parâmetro inválido",
+                    StatusCode = "400"
+                };
+                return BadRequest(erro);
+            }
 
-      return CreatedAtAction(nameof(Get), new { idContato = novoContato.Id }, new ContatoDto(novoContato));
+            var contato = await _contatoService.GetById(idContato);
+
+            if (contato == null)
+            {
+                erro = new Erro
+                {
+                    Mensagem = "Contato não encontrado",
+                    StatusCode = "404"
+                };
+                return NotFound(erro);
+            }
+
+            return Ok(new ContatoDto(contato));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<ContatoDto>> Post([FromBody] ContatoCreateOrUpdateDto contatoCreateOrUpdateDto)
+        {
+            if (contatoCreateOrUpdateDto == null)
+                return BadRequest(new Erro
+                {
+                    Mensagem = "Parâmetros inválidos",
+                    StatusCode = "400"
+                });
+
+            Contato novoContato = await _contatoService.Create(contatoCreateOrUpdateDto);
+
+            return CreatedAtAction(nameof(Get), new { idContato = novoContato.Id }, new ContatoDto(novoContato));
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Delete(Guid idContato)
+        {
+            if (idContato == Guid.Empty)
+                return BadRequest();
+
+            Contato contato = await _contatoService.GetById(idContato);
+            if (contato != null)
+            {
+                await _contatoService.Delete(idContato);
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        [HttpPut("idContato")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put(Guid idContato, [FromBody] ContatoCreateOrUpdateDto contato)
+        {
+            if (idContato == Guid.Empty)
+                return BadRequest();
+
+            try
+            {
+                await _contatoService.Update(idContato, contato);
+            }
+            catch
+            {
+                if (_contatoService.GetById(idContato) == null)
+                    return NotFound();
+            }
+
+            return NoContent();
+
+        }
+
     }
-
-    [HttpDelete]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Delete(Guid idContato)
-    {
-      if (idContato == Guid.Empty)
-        return BadRequest();
-
-      Contato contato = await _contatoService.GetById(idContato);
-      if (contato != null)
-      {
-        await _contatoService.Delete(idContato);
-        return NoContent();
-      }
-
-      return NotFound();
-    }
-
-    [HttpPut("idContato")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Put(Guid idContato, [FromBody] ContatoCreateOrUpdateDto contato)
-    {
-      if (idContato == Guid.Empty)
-        return BadRequest();
-
-      try
-      {
-        var contatoAtualizado = await _contatoService.Update(idContato, contato);
-      }
-      catch
-      {
-        if (_contatoService.GetById(idContato) == null)
-          return NotFound();
-      }
-
-      return NoContent();
-
-    }
-
-  }
 
 }

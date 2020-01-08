@@ -17,14 +17,14 @@ namespace Agenda.Application.Services
       _contatoRepository = contatoRepository;
     }
 
-    public async Task<Contato> Create(ContatoCreateOrUpdateDto contatoCreateOrUpdate)
+    public async Task<Contato> Create(ContatoCreateOrUpdateDto contato)
     {
-      var contato = new Contato(
-                          contatoCreateOrUpdate.Nome,
-                          contatoCreateOrUpdate.Canal,
-                          contatoCreateOrUpdate.Valor,
-                          contatoCreateOrUpdate.Observacoes);
-      Contato novoContato = await _contatoRepository.Create(contato);
+      var contatoToCreate = new Contato(
+                          contato.Nome,
+                          contato.Canal,
+                          contato.Valor,
+                          contato.Observacoes);
+      Contato novoContato = await _contatoRepository.Create(contatoToCreate);
       return novoContato;
     }
 
@@ -48,8 +48,8 @@ namespace Agenda.Application.Services
     public async Task<Contato> Update(Guid id, ContatoCreateOrUpdateDto contato)
     {
       var contatoDb = await GetById(id);
-      var contatoAtualizado = contatoDb.Converter(contato);
-      return await _contatoRepository.Update(id, contatoAtualizado);
+      contatoDb.Converter(contato);
+      return await _contatoRepository.Update(id, contatoDb);
     }
   }
 }
